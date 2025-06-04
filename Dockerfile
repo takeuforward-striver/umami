@@ -21,7 +21,7 @@ ENV BASE_PATH=$BASE_PATH
 
 ENV NEXT_TELEMETRY_DISABLED=1
 
-RUN npm run build-docker
+RUN pnpm run build-docker
 
 # Production image, copy all the files and run next
 FROM node:22-alpine AS runner
