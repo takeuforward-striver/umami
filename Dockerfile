@@ -42,14 +42,12 @@ RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 nextjs
 
 RUN npm install -g pnpm
-
 RUN apk add --no-cache curl
 
-# Install runtime script dependencies
-RUN pnpm add dotenv prisma@6.7.0
-
-# Permissions for prisma
-RUN chown -R nextjs:nodejs node_modules/.pnpm/
+# Copy installed dependencies from builder (including npm-run-all)
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
+COPY --from=builder --chown=nextjs:nodejs /app/package.json ./package.json
+COPY --from=builder --chown=nextjs:nodejs /app/pnpm-lock.yaml ./pnpm-lock.yaml
 
 # Copy necessary built files from builder
 COPY --from=builder --chown=nextjs:nodejs /app/public ./public
